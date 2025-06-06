@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>中文小说游戏</title>
+    <title>小说错字修改</title>
     <style>
         * {
             margin: 0;
@@ -12,238 +12,255 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 20px;
+            padding: 10px;
         }
 
         .container {
-            max-width: 600px;
+            max-width: 100%;
             margin: 0 auto;
         }
 
         .header {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 30px;
             text-align: center;
-            margin-bottom: 30px;
-            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
-            border: 1px solid rgba(255, 255, 255, 0.18);
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
         }
 
         .header h1 {
             color: white;
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 15px;
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 20px;
         }
 
-        .balance {
-            font-size: 36px;
-            font-weight: 800;
-            color: #FFD700;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .collect-tasks-btn {
-            display: block;
-            width: 90%;
-            margin: 20px auto;
-            padding: 15px;
-            background: linear-gradient(45deg, #FF9800, #F57C00);
+        .collect-btn {
+            background: #ff6b6b;
             color: white;
             border: none;
-            border-radius: 12px;
-            font-size: 18px;
-            font-weight: bold;
+            border-radius: 25px;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 500;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.4);
-            transition: all 0.3s ease;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
         }
 
-        .collect-tasks-btn:hover {
+        .collect-btn:hover {
+            background: #ff5252;
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 152, 0, 0.6);
         }
 
         .task-list {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 12px;
+            margin-bottom: 80px;
         }
 
         .task-item {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(20px);
-            border-radius: 16px;
-            padding: 25px;
-            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
-            border: 1px solid rgba(255, 255, 255, 0.18);
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
             transition: all 0.3s ease;
         }
 
         .task-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(31, 38, 135, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .task-item.completed {
+            background: rgba(76, 175, 80, 0.1);
+            border-left: 4px solid #4CAF50;
         }
 
         .task-info {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+
+        .task-icon {
+            width: 40px;
+            height: 40px;
+            background: #6c7ce7;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            color: white;
+            font-size: 18px;
+        }
+
+        .task-icon.completed {
+            background: #4CAF50;
+        }
+
+        .task-details {
             flex: 1;
         }
 
         .task-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: white;
-            margin-bottom: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 4px;
         }
 
         .task-description {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.8);
-            line-height: 1.4;
+            font-size: 12px;
+            color: #666;
         }
 
         .task-reward {
-            font-size: 20px;
-            font-weight: 700;
-            color: #FFD700;
-            margin: 0 20px;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-        }
-
-        .task-button {
-            background: linear-gradient(45deg, #4CAF50, #45a049);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            padding: 12px 20px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
-        }
-
-        .task-button:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.6);
-        }
-
-        .task-button.completed {
-            background: linear-gradient(45deg, #4CAF50, #45a049);
-            cursor: not-allowed;
-        }
-
-        .task-button:disabled {
-            opacity: 0.8;
-        }
-
-        .total-balance {
-            text-align: center;
-            padding: 25px;
-            margin-top: 30px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            border-radius: 16px;
-            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-        }
-
-        .total-balance-title {
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 8px;
-        }
-
-        .total-balance-amount {
-            font-size: 28px;
-            font-weight: bold;
-            color: #FFD700;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(5px);
-        }
-
-        .modal-content {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            margin: 5% auto;
-            border-radius: 20px;
-            width: 90%;
-            max-width: 800px;
-            max-height: 85vh;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
             display: flex;
             flex-direction: column;
+            align-items: flex-end;
+            margin-right: 12px;
         }
 
-        .reward-header {
-            background: linear-gradient(45deg, #e53e3e, #c53030);
+        .reward-amount {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ff6b6b;
+            margin-bottom: 4px;
+        }
+
+        .task-action {
+            background: #6c7ce7;
             color: white;
-            padding: 20px;
-            font-size: 18px;
-            font-weight: bold;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .task-action:hover {
+            background: #5a6fd8;
+        }
+
+        .task-action.completed {
+            background: #4CAF50;
+            cursor: default;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(102, 126, 234, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
         }
 
-        .text-content {
-            flex: 1;
-            padding: 30px;
+        .total-balance {
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .balance-amount {
+            color: #FFD700;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        /* 任务模态框 */
+        .task-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
             overflow-y: auto;
-            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
             color: #333;
-            line-height: 1.8;
+        }
+
+        .close-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
             font-size: 16px;
         }
 
+        .task-content {
+            line-height: 1.8;
+            font-size: 16px;
+            color: #333;
+            white-space: pre-wrap;
+            cursor: pointer;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
         .submit-btn {
-            background: linear-gradient(45deg, #4CAF50, #45a049);
+            background: #4CAF50;
             color: white;
             border: none;
-            padding: 15px;
-            font-size: 18px;
-            font-weight: bold;
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
         }
 
         .submit-btn:hover {
-            background: linear-gradient(45deg, #45a049, #4CAF50);
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 10px;
-            }
-            
-            .task-item {
-                flex-direction: column;
-                text-align: center;
-                gap: 15px;
-            }
-            
-            .task-reward {
-                margin: 0;
-            }
+            background: #45a049;
         }
     </style>
 </head>
@@ -251,37 +268,39 @@
     <div class="container">
         <div class="header">
             <h1>小说错字修改</h1>
-            <div class="balance" id="balance">30.00</div>
+            <button class="collect-btn" onclick="collectTasks()">领取任务</button>
         </div>
-
-        <button class="collect-tasks-btn" onclick="collectTasks()">领取任务</button>
 
         <div class="task-list" id="taskList">
-            <!-- Tasks will be loaded here -->
+            <!-- 任务列表将动态生成 -->
         </div>
 
-        <div class="total-balance">
-            <div class="total-balance-title">总积分</div>
-            <div class="total-balance-amount" id="totalBalance">630.0</div>
+        <div class="footer">
+            <div class="total-balance">
+                总余额: <span class="balance-amount" id="balance">960.00</span>
+            </div>
+            <div class="total-balance">
+                已完成: <span class="balance-amount" id="completedCount">20</span>
+            </div>
         </div>
     </div>
 
-    <!-- Modal for task editing -->
-    <div class="modal" id="taskModal">
+    <!-- 任务模态框 -->
+    <div class="task-modal" id="taskModal">
         <div class="modal-content">
-            <div class="reward-header">
-                <span>报酬：¥30.00</span>
-                <button class="close-btn" onclick="closeModal()" style="background: none; border: none; color: white; font-size: 20px; cursor: pointer;">&times;</button>
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle">任务详情</div>
+                <button class="close-btn" onclick="closeModal()">×</button>
             </div>
-            <div class="text-content" id="modalContent">
-                <!-- Task content will be loaded here -->
+            <div class="task-content" id="modalContent" onclick="submitTask()">
+                <!-- 任务内容 -->
             </div>
             <button class="submit-btn" onclick="submitTask()">✓ 提交</button>
         </div>
     </div>
 
     <script>
-        // 完整的20个任务数据 - 基于线上真实数据
+        // 完整的20个任务数据
         const tasks = [
             { id: 1, title: "非强迫宠爱第1章", description: "请在下面的文本中找出错字", reward: "+30.00", content: "第1章 非强迫宠爱\n\n裴祤宁从未想过，有朝一日自己竟然会为了六千万跟周时聿杠上。\n事情是从一场拍卖会开始的。\n那天，裴祤宁刚从国外回来，就被宋沅沅拉去参加了个慈善拍卖会。\n拍卖会现场，当拍卖师拿出一颗稀有的橙色钻石时，裴祤宁的眼睛瞬间就亮了。\n"这颗钻石来自南非的著名矿场，重达15.8克拉，颜色纯正，切工完美……"\n裴祤宁正听得入神，耳边忽然传来一个熟悉的声音：\n"一千万。"\n她转头一看，正是周时聿。\n这个男人，从小到大就跟她不对付。\n裴祤宁心想，既然他要，那她偏不能让他得逞。\n"一千五百万！"裴祤宁高高举起手中的号牌。\n周时聿看了她一眼，嘴角勾起一丝不易察觉的笑意：\n"两千万。"\n"三千万！"裴祤宁咬牙道。\n就这样，两人你来我往，价格一路飙升。\n最终，裴祤宁以六千万的天价拍下了这颗钻石。\n当拍卖师的锤子落下时，周围响起了热烈的掌声。\n但裴祤宁却有些后悔了。\n六千万，为了一颗钻石，这代价是不是太大了？\n更气人的是，周时聿竟然还走过来"恭喜"她：\n"恭喜裴小姐，这颗钻石很适合你。"\n说完，他就走了，留下裴祤宁一个人在那里生气。\n\n点击任意位置即可提交成功。" },
             { id: 2, title: "非强迫宠爱第2章", description: "请在下面的文本中找出错字", reward: "+30.00", content: "第2章 非强迫宠爱\n\n回到家，裴祤宁越想越觉得不对劲。\n周时聿为什么会突然放弃？\n他不是一向都跟自己争到底的吗？\n第二天，裴祤宁决定去找周时聿问个明白。\n她来到周氏集团的大厦，直接上了顶楼的总裁办公室。\n"你昨天是故意的对不对？"裴祤宁开门见山地问。\n周时聿抬起头，看着气势汹汹的裴祤宁，淡淡说道：\n"什么故意？"\n"别装了！"裴祤宁拍桌子道，"你明明可以继续加价的，为什么要放弃？"\n周时聿放下手中的文件，起身走到她面前：\n"因为我达到目的了。"\n"什么目的？"\n"让你花六千万买一颗钻石。"周时聿的眼中闪过一丝狡猾，"这不是很有趣吗？"\n裴祤宁瞪大了眼睛，简直不敢相信：\n"你……你耍我？！"\n"算是吧。"周时聿耸了耸肩，"谁让你每次都要跟我作对呢？"\n裴祤宁气得说不出话来。\n这个男人，实在是太可恶了！\n\n点击任意位置即可提交成功。" },
@@ -308,14 +327,14 @@
         let currentTask = null;
         let completedTasks = new Set();
 
-        // Initialize the app
+        // 初始化应用
         function init() {
             // 默认显示所有任务为已完成状态
             tasks.forEach(task => completedTasks.add(task.id));
             loadTasks();
         }
 
-        // Load tasks into the task list
+        // 加载任务列表
         function loadTasks() {
             const taskList = document.getElementById('taskList');
             taskList.innerHTML = '';
@@ -323,44 +342,57 @@
             tasks.forEach(task => {
                 const isCompleted = completedTasks.has(task.id);
                 const taskElement = document.createElement('div');
-                taskElement.className = 'task-item';
+                taskElement.className = 'task-item' + (isCompleted ? ' completed' : '');
                 taskElement.innerHTML = `
                     <div class="task-info">
-                        <div class="task-title">${task.title}</div>
-                        <div class="task-description">${task.description}</div>
+                        <div class="task-icon ${isCompleted ? 'completed' : ''}">
+                            ${isCompleted ? '✓' : '📖'}
+                        </div>
+                        <div class="task-details">
+                            <div class="task-title">${task.title}</div>
+                            <div class="task-description">${task.description}</div>
+                        </div>
                     </div>
-                    <div class="task-reward">${task.reward}</div>
-                    <button class="task-button ${isCompleted ? 'completed' : ''}" onclick="openTask(${task.id})" ${isCompleted ? 'disabled' : ''}>
-                        ${isCompleted ? '已完成' : '进行修改'}
+                    <div class="task-reward">
+                        <div class="reward-amount">${task.reward}</div>
+                    </div>
+                    <button class="task-action ${isCompleted ? 'completed' : ''}" onclick="${isCompleted ? '' : 'openTask(' + task.id + ')'}">
+                        ${isCompleted ? '已完成' : '进行任务'}
                     </button>
                 `;
                 taskList.appendChild(taskElement);
             });
+
+            // 更新已完成数量
+            document.getElementById('completedCount').textContent = completedTasks.size;
         }
 
         // 领取任务功能 - 重置所有任务状态
         function collectTasks() {
             completedTasks.clear();
+            document.getElementById('balance').textContent = '330.00';
             loadTasks();
         }
 
-        // Open task modal
+        // 打开任务模态框
         function openTask(taskId) {
             if (completedTasks.has(taskId)) return;
             
             currentTask = tasks.find(t => t.id === taskId);
             if (!currentTask) return;
 
-            document.getElementById('modalContent').innerHTML = currentTask.content;
+            document.getElementById('modalTitle').textContent = currentTask.title;
+            document.getElementById('modalContent').textContent = currentTask.content;
             document.getElementById('taskModal').style.display = 'block';
-
-            // 为任务内容添加点击事件 - 点击任何地方都可以提交
-            document.getElementById('modalContent').onclick = function() {
-                submitTask();
-            };
         }
 
-        // Submit task - 直接提交成功
+        // 关闭模态框
+        function closeModal() {
+            document.getElementById('taskModal').style.display = 'none';
+            currentTask = null;
+        }
+
+        // 提交任务 - 直接提交成功
         function submitTask() {
             if (!currentTask) return;
             
@@ -370,7 +402,7 @@
             loadTasks();
         }
 
-        // Update balance
+        // 更新余额
         function updateBalance(amount) {
             const balanceElement = document.getElementById('balance');
             const currentBalance = parseFloat(balanceElement.textContent);
@@ -378,22 +410,16 @@
             balanceElement.textContent = newBalance.toFixed(2);
         }
 
-        // Close modal
-        function closeModal() {
-            document.getElementById('taskModal').style.display = 'none';
-            currentTask = null;
-        }
-
-        // Close modal when clicking outside
+        // 点击模态框外部关闭
         window.onclick = function(event) {
             const modal = document.getElementById('taskModal');
-            if (event.target === modal) {
+            if (event.target == modal) {
                 closeModal();
             }
         }
 
-        // Initialize app when page loads
-        window.onload = init;
+        // 初始化应用
+        init();
     </script>
 </body>
 </html>
