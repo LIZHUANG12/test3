@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>小说错字修改</title>
+    <title>中文小说错别字修改游戏</title>
     <style>
         * {
             margin: 0;
@@ -12,10 +12,11 @@
         }
 
         body {
-            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-family: "PingFang SC", "Microsoft YaHei", -apple-system, BlinkMacSystemFont, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 10px;
+            color: white;
+            overflow-x: hidden;
         }
 
         .container {
@@ -23,317 +24,549 @@
             margin: 0 auto;
         }
 
-        .header {
+        /* Header Styles */
+        .header-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             text-align: center;
-            padding: 20px;
-            margin-bottom: 20px;
+            padding: 32px 24px;
             position: relative;
+            overflow: hidden;
         }
 
-        .header h1 {
+        .header-gradient h1 {
             color: white;
-            font-size: 20px;
-            font-weight: 500;
-            margin-bottom: 60px;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            margin-top: 60px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .coins-icon {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            color: #ffd700;
+            font-size: 24px;
+            animation: bounce 2s infinite;
+        }
+
+        .top-right-controls {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .collect-btn {
-            background: #ff6b6b;
+            background: #ef4444;
             color: white;
             border: none;
-            border-radius: 25px;
-            padding: 12px 24px;
+            border-radius: 8px;
+            padding: 8px 16px;
             font-size: 14px;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
-            z-index: 10;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+            transition: all 0.3s ease;
         }
 
         .collect-btn:hover {
-            background: #ff5252;
+            background: #dc2626;
             transform: translateY(-2px);
         }
 
-        .task-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 80px;
+        .gift-icon {
+            color: #ffd700;
+            font-size: 24px;
+            animation: bounce 2s infinite;
+            animation-delay: 0.5s;
         }
 
-        .task-item {
-            background: rgba(255, 255, 255, 0.95);
+        /* Task List Styles */
+        .task-list {
+            padding: 0 16px 24px;
+            margin-bottom: 100px;
+        }
+
+        .task-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
             border-radius: 12px;
+            margin-bottom: 16px;
             padding: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        .task-item:hover {
+        .task-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 8px 25px rgba(255, 71, 87, 0.15);
         }
 
-        .task-item.completed {
-            background: rgba(76, 175, 80, 0.1);
-            border-left: 4px solid #4CAF50;
-        }
-
-        .task-info {
+        .task-card-content {
             display: flex;
             align-items: center;
-            flex: 1;
+            justify-content: space-between;
+        }
+
+        .task-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
         .task-icon {
             width: 40px;
             height: 40px;
-            background: #6c7ce7;
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 12px;
-            color: white;
             font-size: 18px;
+            color: white;
         }
 
         .task-icon.completed {
-            background: #4CAF50;
+            background: #10b981;
         }
 
-        .task-details {
-            flex: 1;
+        .task-icon.pending {
+            background: #3b82f6;
         }
 
-        .task-title {
+        .task-details h3 {
             font-size: 16px;
-            font-weight: 500;
-            color: #333;
+            font-weight: 600;
+            color: #1f2937;
             margin-bottom: 4px;
         }
 
-        .task-description {
-            font-size: 12px;
-            color: #666;
+        .task-details p {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .task-details p.completed {
+            color: #059669;
+        }
+
+        .task-right {
+            text-align: right;
         }
 
         .task-reward {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            margin-right: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
         }
 
-        .reward-amount {
-            font-size: 14px;
-            font-weight: 600;
-            color: #ff6b6b;
-            margin-bottom: 4px;
+        .task-reward.completed {
+            color: #059669;
         }
 
-        .task-action {
-            background: #6c7ce7;
-            color: white;
-            border: none;
-            border-radius: 20px;
+        .task-reward.pending {
+            color: #ef4444;
+        }
+
+        .task-action-btn {
             padding: 8px 16px;
+            border-radius: 20px;
             font-size: 12px;
+            font-weight: 500;
+            border: none;
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        .task-action:hover {
-            background: #5a6fd8;
+        .task-action-btn.completed {
+            background: #d1d5db;
+            color: #6b7280;
+            cursor: not-allowed;
         }
 
-        .task-action.completed {
-            background: #4CAF50;
-            cursor: default;
+        .task-action-btn.pending {
+            background: #3b82f6;
+            color: white;
         }
 
-        .footer {
+        .task-action-btn.pending:hover {
+            background: #2563eb;
+        }
+
+        /* Floating Stats */
+        .floating-stats {
             position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(102, 126, 234, 0.95);
-            backdrop-filter: blur(20px);
-            padding: 15px;
+            bottom: 16px;
+            left: 16px;
+            right: 16px;
             display: flex;
             justify-content: space-between;
+            gap: 8px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 20px;
+            padding: 12px 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
             align-items: center;
-            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+            gap: 8px;
+            flex: 1;
+            justify-content: center;
         }
 
-        .total-balance {
-            color: white;
-            font-size: 16px;
+        .stat-icon {
+            color: #f59e0b;
+            font-size: 20px;
+        }
+
+        .stat-text {
             font-weight: 600;
+            color: #1f2937;
+            font-size: 14px;
         }
 
-        .balance-amount {
-            color: #FFD700;
-            font-size: 18px;
-            font-weight: 700;
-        }
-
-        /* 任务模态框 */
-        .task-modal {
+        /* Modal Styles */
+        .modal-backdrop {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
             z-index: 1000;
-            overflow-y: auto;
+            padding: 16px;
         }
 
         .modal-content {
             background: white;
-            margin: 20px;
-            padding: 20px;
-            border-radius: 12px;
-            max-height: 80vh;
-            overflow-y: auto;
-            position: relative;
+            border-radius: 16px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            color: #333;
+            overflow: hidden;
+            animation: redPacket 1s ease-out;
         }
 
         .modal-header {
+            background: linear-gradient(to right, #ef4444, #ec4899);
+            color: white;
+            padding: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
         }
 
-        .modal-title {
+        .modal-reward {
+            color: #fde047;
+            font-weight: 700;
             font-size: 18px;
-            font-weight: 600;
-            color: #333;
         }
 
         .close-btn {
-            background: #ff6b6b;
-            color: white;
+            background: none;
             border: none;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
+            color: white;
+            font-size: 24px;
             cursor: pointer;
-            font-size: 16px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .task-content {
+        .modal-text-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
             line-height: 1.8;
             font-size: 16px;
-            color: #333;
-            white-space: pre-wrap;
-            cursor: pointer;
-            padding: 20px;
-            background: #f8f9fa;
+            background: #f9fafb;
             border-radius: 8px;
-            margin-bottom: 20px;
+            margin: 20px;
+            user-select: none;
+            min-height: 400px;
+        }
+
+        .modal-text-content span {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .modal-text-content span:hover {
+            background: #fef3c7;
+        }
+
+        .modal-text-content span.clicked {
+            background: #fecaca;
+            color: #991b1b;
+            font-weight: 600;
+        }
+
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid #e5e7eb;
+            background: white;
+            flex-shrink: 0;
         }
 
         .submit-btn {
-            background: #4CAF50;
+            width: 100%;
+            background: #10b981;
             color: white;
             border: none;
-            border-radius: 25px;
-            padding: 12px 30px;
+            border-radius: 20px;
+            padding: 16px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            width: 100%;
-            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            min-height: 56px;
         }
 
         .submit-btn:hover {
-            background: #45a049;
+            background: #059669;
+        }
+
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Reward Notification */
+        .reward-notification {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2000;
+            background: linear-gradient(to right, #fbbf24, #f59e0b);
+            color: #92400e;
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            animation: coinFlip 0.6s ease-in-out;
+        }
+
+        .reward-notification .coins-large {
+            font-size: 48px;
+            margin-bottom: 8px;
+            animation: bounce 2s infinite;
+        }
+
+        .reward-notification h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .reward-notification .amount {
+            font-size: 24px;
+            font-weight: 700;
+            color: #dc2626;
+            margin-bottom: 4px;
+        }
+
+        .reward-notification .status {
+            font-size: 14px;
+        }
+
+        /* Animations */
+        @keyframes bounce {
+            0%, 20%, 53%, 80%, 100% { transform: translateY(0); }
+            40%, 43% { transform: translateY(-10px); }
+            70% { transform: translateY(-5px); }
+            90% { transform: translateY(-2px); }
+        }
+
+        @keyframes coinFlip {
+            0% { transform: translate(-50%, -50%) rotateY(0deg) scale(1); opacity: 0; }
+            50% { transform: translate(-50%, -50%) rotateY(180deg) scale(1.1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) rotateY(360deg) scale(1); opacity: 1; }
+        }
+
+        @keyframes redPacket {
+            0% { transform: scale(0) rotate(-10deg); opacity: 0; }
+            50% { transform: scale(1.2) rotate(5deg); opacity: 1; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        /* Icons */
+        .icon {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+        }
+
+        /* Responsive */
+        @media (min-width: 768px) {
+            .modal-content {
+                max-width: 500px;
+                max-height: 90vh;
+                margin: auto;
+                height: auto;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>小说错字修改</h1>
-            <button class="collect-btn" onclick="collectTasks()">领取任务</button>
-        </div>
-
-        <div class="task-list" id="taskList">
-            <!-- 任务列表将动态生成 -->
-        </div>
-
-        <div class="footer">
-            <div class="total-balance">
-                余额: <span class="balance-amount" id="balance">960.00</span>
+        <!-- Header -->
+        <div class="header-gradient">
+            <div class="coins-icon">💰</div>
+            <div class="top-right-controls">
+                <button class="collect-btn" onclick="handleResetTasks()">领取任务</button>
+                <div class="gift-icon">🎁</div>
             </div>
-            <div class="total-balance">
-                已完成: <span class="balance-amount" id="completedCount">20</span>
+            <h1>小说错别字修改</h1>
+        </div>
+
+        <!-- Task List -->
+        <div class="task-list" id="taskList">
+            <!-- Tasks will be dynamically generated -->
+        </div>
+
+        <!-- Floating Stats -->
+        <div class="floating-stats">
+            <div class="stat-card">
+                <div class="stat-icon">💳</div>
+                <div class="stat-text">余额: ¥<span id="balance">30.00</span></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🏆</div>
+                <div class="stat-text">已完成: <span id="completed">0</span></div>
             </div>
         </div>
     </div>
 
-    <!-- 任务模态框 -->
-    <div class="task-modal" id="taskModal">
+    <!-- Task Modal -->
+    <div class="modal-backdrop" id="taskModal">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-title" id="modalTitle">任务详情</div>
-                <button class="close-btn" onclick="closeModal()">×</button>
+                <div class="modal-reward">报酬: ¥<span id="modalReward">48.00</span></div>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
             </div>
-            <div class="task-content" id="modalContent" onclick="submitTask()">
-                <!-- 任务内容 -->
+            <div class="modal-text-content" id="modalContent">
+                <!-- Task content will be loaded here -->
             </div>
-            <button class="submit-btn" onclick="submitTask()">✓ 提交</button>
+            <div class="modal-footer">
+                <button class="submit-btn" onclick="submitTask()">
+                    <span>✓</span>
+                    提交
+                </button>
+            </div>
         </div>
+    </div>
+
+    <!-- Reward Notification -->
+    <div class="reward-notification" id="rewardNotification">
+        <div class="coins-large">💰</div>
+        <h3>恭喜获得</h3>
+        <div class="amount" id="rewardAmount">+48.00</div>
+        <div class="status">已到账</div>
     </div>
 
     <script>
-        // 完整的20个任务数据
-        const tasks = [
-            { id: 1, title: "非强迫宠爱第1章", description: "请在下面的文本中找出错字", reward: "+30.00", content: "第1章 非强迫宠爱\n\n裴祤宁从未想过，有朝一日自己竟然会为了六千万跟周时聿杠上。\n事情是从一场拍卖会开始的。\n那天，裴祤宁刚从国外回来，就被宋沅沅拉去参加了个慈善拍卖会。\n拍卖会现场，当拍卖师拿出一颗稀有的橙色钻石时，裴祤宁的眼睛瞬间就亮了。\n"这颗钻石来自南非的著名矿场，重达15.8克拉，颜色纯正，切工完美……"\n裴祤宁正听得入神，耳边忽然传来一个熟悉的声音：\n"一千万。"\n她转头一看，正是周时聿。\n这个男人，从小到大就跟她不对付。\n裴祤宁心想，既然他要，那她偏不能让他得逞。\n"一千五百万！"裴祤宁高高举起手中的号牌。\n周时聿看了她一眼，嘴角勾起一丝不易察觉的笑意：\n"两千万。"\n"三千万！"裴祤宁咬牙道。\n就这样，两人你来我往，价格一路飙升。\n最终，裴祤宁以六千万的天价拍下了这颗钻石。\n当拍卖师的锤子落下时，周围响起了热烈的掌声。\n但裴祤宁却有些后悔了。\n六千万，为了一颗钻石，这代价是不是太大了？\n更气人的是，周时聿竟然还走过来"恭喜"她：\n"恭喜裴小姐，这颗钻石很适合你。"\n说完，他就走了，留下裴祤宁一个人在那里生气。\n\n点击任意位置即可提交成功。" },
-            { id: 2, title: "非强迫宠爱第2章", description: "请在下面的文本中找出错字", reward: "+30.00", content: "第2章 非强迫宠爱\n\n回到家，裴祤宁越想越觉得不对劲。\n周时聿为什么会突然放弃？\n他不是一向都跟自己争到底的吗？\n第二天，裴祤宁决定去找周时聿问个明白。\n她来到周氏集团的大厦，直接上了顶楼的总裁办公室。\n"你昨天是故意的对不对？"裴祤宁开门见山地问。\n周时聿抬起头，看着气势汹汹的裴祤宁，淡淡说道：\n"什么故意？"\n"别装了！"裴祤宁拍桌子道，"你明明可以继续加价的，为什么要放弃？"\n周时聿放下手中的文件，起身走到她面前：\n"因为我达到目的了。"\n"什么目的？"\n"让你花六千万买一颗钻石。"周时聿的眼中闪过一丝狡猾，"这不是很有趣吗？"\n裴祤宁瞪大了眼睛，简直不敢相信：\n"你……你耍我？！"\n"算是吧。"周时聿耸了耸肩，"谁让你每次都要跟我作对呢？"\n裴祤宁气得说不出话来。\n这个男人，实在是太可恶了！\n\n点击任意位置即可提交成功。" },
-            { id: 3, title: "非强迫宠爱第3章", description: "请在下面的文本中找出错字", reward: "+30.00", content: "第3章 非强迫宠爱\n\n她转身就要走，却被周时聿叫住：\n"等等。"\n"还有什么事？"裴祤宁冷冷地问。\n周时聿从抽屉里拿出一个小盒子，递给她：\n"这个送给你。"\n裴祤宁狐疑地接过盒子，打开一看，竟然是一支限量版的口红。\n"这是什么意思？"她不解地问。\n"算是……补偿吧。"周时聿说，"毕竟让你花了那么多钱。"\n裴祤宁看着手中的口红，心情复杂。\n这个男人，有时候真的让人摸不透。\n"我不需要你的补偿。"裴祤宁把盒子放回桌上，"我们之间，从来就不欠什么。"\n说完，她头也不回地走了。\n周时聿看着她的背影，眼中闪过一丝复杂的情绪。\n这个女人，还是和以前一样倔强。\n从办公室出来，裴祤宁心情烦躁。\n她决定去商场逛逛，散散心。\n没想到，在商场里又遇到了周时聿。\n\n点击任意位置即可提交成功。" },
-            { id: 4, title: "非强迫宠爱第4章", description: "请在下面的文本中找出错字", reward: "+30.00", content: "第4章 非强迫宠爱\n\n"你怎么也在这里？"裴祤宁皱眉问道。\n"这是我的商场。"周时聿淡淡说道。\n裴祤宁：？？？\n"什么叫你的商场？"\n"就是字面意思。"周时聿解释道，"这个商场，是我们公司投资建的。"\n裴祤宁顿时感觉更加郁闷了。\n连逛个街都能遇到他，这是什么运气？\n"那我走还不行吗？"裴祤宁转身就要离开。\n"等等。"周时聿又叫住了她，"既然来了，不如一起喝杯咖啡？"\n裴祤宁停下脚步，回头看着他：\n"你今天是怎么了？这么……反常？"\n周时聿笑了笑：\n"可能是因为心情不错吧。"\n"心情不错？"裴祤宁冷笑，"是因为成功耍了我一把？"\n"不是。"周时聿摇头，"是因为……见到你了。"\n这句话，让裴祤宁愣住了。\n她盯着周时聿，想从他的眼中看出什么。\n但那双深邃的眼睛，就像深不见底的海洋，让人看不透。\n\n点击任意位置即可提交成功。" },
-            { id: 5, title: "非强迫宠爱第5章", description: "请在下面的文本中找出错字", reward: "+30.00", content: "第5章 非强迫宠爱\n\n"你……你在说什么？"裴祤宁有些慌乱地问。\n"没什么。"周时聿恢复了平常的冷淡，"就是随便说说。"\n裴祤宁心中一阵失落，但很快就调整好了情绪：\n"那我走了。"\n这次，周时聿没有再叫住她。\n裴祤宁快步离开，心跳却莫名加速。\n周时聿刚才的话，是什么意思？\n他是在开玩笑，还是……\n裴祤宁摇摇头，觉得自己想多了。\n那个男人，怎么可能对她有什么特殊的感情？\n他们从小就是冤家，这一点，永远都不会改变。\n但是，当天晚上，裴祤宁却怎么也睡不着。\n她一直在想周时聿的话，想他的表情，想他眼中那一闪而过的温柔。\n也许，他们之间的关系，真的可以改变？\n不过，这种想法很快就被裴祤宁压了下去。\n她告诉自己，不要想太多。\n周时聿就是周时聿，那个从小跟她作对的男人。\n他们之间，除了斗争，不会有别的。\n\n点击任意位置即可提交成功。" },
-            { id: 6, title: "非强迫宠爱第6章", description: "请在下面的文本中找出错字", reward: "+30.00", content: "第6章 非强迫宠爱\n\n第二天，裴祤宁收到了一个包裹。\n打开一看，竟然是那支限量版口红。\n还有一张纸条：\n"既然是补偿，就应该收下。——周时聿"\n裴祤宁看着纸条，心情复杂。\n这个男人，到底想做什么？\n但不管怎样，这支口红她是不会用的。\n她把它放进了抽屉的最深处，仿佛那样就能忘记这件事。\n但她不知道的是，这只是一个开始。\n从那天起，她和周时聿之间的关系，开始发生了微妙的变化。\n而那六千万的钻石，也成了她心中永远的梗。\n这个故事，才刚刚开始。\n裴祤宁没想到，有一天她会因为一颗钻石而重新认识一个人。\n更没想到，那个人会是周时聿。\n也许，命运就是这样奇妙。\n在你最不经意的时候，给你一个惊喜。\n或者，一个惊吓。\n\n点击任意位置即可提交成功。" },
-            { id: 7, title: "非强迫宠爱第7章", description: "请在下面的文本中找出错字", reward: "+30.00", content: "第7章 非强迫宠爱\n\n一周后，裴祤宁在一个慈善晚宴上再次遇到了周时聿。\n这次，她没有主动避开。\n相反，她主动走了过去。\n"周总。"她礼貌地打招呼。\n周时聿有些意外地看着她：\n"裴小姐。"\n"上次的口红，我收到了。"裴祤宁说，"谢谢。"\n"你用了吗？"周时聿问。\n"没有。"裴祤宁诚实地回答，"我觉得它太贵重了。"\n周时聿笑了笑：\n"那就对了。"\n"什么意思？"\n"这样的东西，应该留着纪念。"周时聿说，"纪念我们的第一次……合作。"\n裴祤宁愣了一下：\n"合作？"\n"你帮我拍到了那颗钻石，我帮你找到了它的真正价值。"周时聿解释道。\n裴祤宁终于明白了：\n"所以，你从一开始就没想要那颗钻石？"\n"对。"周时聿点头，"我只是想看看，你会为了一样东西付出多少。"\n\n点击任意位置即可提交成功。" },
-            { id: 8, title: "非强迫宠爱第8章", description: "请在下面的文本中找出错字", reward: "+30.00", content: "第8章 非强迫宠爱\n\n"然后呢？"裴祤宁问道。\n"然后我发现，你比我想象的更执着。"周时聿说。\n裴祤宁听了这话，心中一动。\n她没想到，周时聿竟然会这样评价她。\n"这……这算是夸奖吗？"她有些不确定地问。\n"算是吧。"周时聿笑了笑，"你一直都是这样，为了自己想要的东西，从不退缩。"\n裴祤宁感觉心中的怒气消散了一些。\n她重新审视着眼前的男人。\n从小到大，他们确实是冤家。\n但仔细想想，周时聿好像从来没有真正伤害过她。\n最多就是跟她作对，和她竞争。\n"那你呢？"裴祤宁突然问道，"你为什么最后放弃了？"\n周时聿沉默了一会儿，然后说：\n"因为我发现，看着你得到自己想要的东西，比我自己得到更让我开心。"\n这句话，让裴祤宁彻底愣住了。\n她呆呆地看着周时聿，不知道该说什么。\n\n点击任意位置即可提交成功。" },
-            { id: 9, title: "非强迫宠爱第9章", description: "请在下面的文本中找出错字", reward: "+30.00", content: "第9章 非强迫宠爱\n\n"我走了。"周时聿说完，转身离开。\n裴祤宁站在原地，看着他的背影，心中五味杂陈。\n这个男人，有时候真的让人琢磨不透。\n回到家，裴祤宁把钻石放在梳妆台上，静静地看着它。\n想起周时聿的话，她忽然觉得这六千万花得值了。\n不是因为钻石本身，而是因为……她也说不清楚。\n晚上，裴祤宁收到了一条微信消息。\n是周时聿发来的：\n"钻石戴上试试，应该很美。"\n看到这条消息，裴祤宁的脸微微发红。\n她把钻石拿起来，对着镜子戴上。\n橙色的光芒映在她的皮肤上，确实很漂亮。\n她拍了张照片，本想发给周时聿看。\n但是想了想，又删掉了。\n她不想让他觉得自己很在意他的话。\n第二天，裴祤宁在公司遇到了好朋友宋沅沅。\n"听说你昨天去取钻石了？"宋沅沅八卦地问道。\n\n点击任意位置即可提交成功。" },
-            { id: 10, title: "非强迫宠爱第10章", description: "请在下面的文本中找出错字", reward: "+30.00", content: "第10章 非强迫宠爱\n\n"嗯。"裴祤宁点头。\n"戴上了吗？肯定很美！"宋沅沅兴奋地说。\n"还行吧。"裴祤宁淡淡说道。\n"什么叫还行？六千万的钻石呢！"宋沅沅夸张地说，"你应该天天戴着炫耀才对！"\n"我才不会那么肤浅。"裴祤宁反驳道。\n"对了，"宋沅沅忽然想起什么，"听说那天周时聿也在拍卖会现场？"\n"是的。"裴祤宁点头。\n"你们没有打起来吧？"宋沅沅担心地问。\n"没有。"裴祤宁摇头。\n"那就好。"宋沅沅松了口气，"你们两个从小打到大，我都担心会出事。"\n裴祤宁听了这话，陷入了沉思。\n她和周时聿从小就是冤家，这是所有人都知道的事。\n但是最近，她觉得他们之间的关系好像有了一些变化。\n虽然她说不清楚是什么变化，但确实有所不同。\n\n点击任意位置即可提交成功。" },
-            { id: 11, title: "非强迫宠爱第11章", description: "请在下面的文本中找出错字", reward: "+30.00", content: "第11章 非强迫宠爱\n\n"沅沅。"裴祤宁忽然叫道。\n"什么？"\n"你觉得一个人会改变吗？"裴祤宁问道。\n"当然会啊。"宋沅沅毫不犹豫地回答，"人都是会变的，特别是……"\n她忽然停下，看着裴祤宁：\n"你该不会是在说周时聿吧？"\n裴祤宁没有回答，但表情已经说明了一切。\n"天哪！"宋沅沅惊呼，"你该不会是喜欢上他了吧？"\n"胡说八道什么！"裴祤宁脸红了，"我怎么可能喜欢他！"\n"那你为什么关心他会不会改变？"宋沅沅追问道。\n"我……我就是随便问问。"裴祤宁结结巴巴地说。\n宋沅沅看着她的样子，笑了：\n"宁宁，你真的变了。"\n"我哪里变了？"裴祤宁不服气地问。\n"以前的你，从来不会考虑周时聿的感受。"宋沅沅说，"但是现在，你开始关心他了。"\n\n点击任意位置即可提交成功。" },
-            { id: 12, title: "非强迫宠爱第12章", description: "请在下面的文本中找出错字", reward: "+30.00", content: "第12章 非强迫宠爱\n\n裴祤宁想要反驳，但是发现自己确实无话可说。\n最近，她确实经常想起周时聿。\n想起他的话，他的表情，他的一举一动。\n这种感觉，让她既困惑又不安。\n"我不想谈这个话题了。"裴祤宁说道。\n"好好好，不谈。"宋沅沅笑着说，"但是我觉得，如果你们能在一起，一定很有趣。"\n"我们不可能在一起的。"裴祤宁坚决地说，"我们是冤家，永远都是。"\n但是说这话的时候，她的声音却没有以前那么坚定了。\n宋沅沅注意到了这一点，但是没有说出来。\n她只是在心中暗暗想着：\n也许，这两个冤家真的要有故事了。\n下午，裴祤宁回到家，发现门口有一个快递。\n打开一看，是一束橙色的玫瑰。\n卡片上写着：\n"愿你像这钻石一样，永远闪闪发光。——一个朋友"\n\n点击任意位置即可提交成功。" },
-            { id: 13, title: "非强迫宠爱第13章", description: "请在下面的文本中找出错字", reward: "+30.00", content: "第13章 非强迫宠爱\n\n裴祤宁看着这束花，心中涌起一阵暖流。\n虽然卡片上没有署名，但她知道是谁送的。\n只有周时聿会选择橙色的玫瑰，来呼应那颗橙钻。\n她把花放在客厅，看着它们美丽的颜色，心情莫名变好了。\n也许，宋沅沅说得对。\n她真的变了。\n以前的她，绝对不会因为周时聿的一个小小举动就感到开心。\n但是现在，她不得不承认，她确实被他的温柔打动了。\n这种变化，让她既兴奋又害怕。\n兴奋的是，她发现了周时聿不为人知的一面。\n害怕的是，她不知道这种变化会带来什么后果。\n她只能走一步看一步了。\n晚上，裴祤宁躺在床上，想着白天发生的一切。\n她伸手摸了摸枕边的钻石盒子，心中充满了复杂的情绪。\n这颗六千万的钻石，或许真的值了。\n不是因为它的价值，而是因为它让她重新认识了周时聿。\n也让她重新认识了自己。\n\n点击任意位置即可提交成功。" },
-            { id: 14, title: "非强迫宠爱第14章", description: "请在下面的文本中找出错字", reward: "+30.00", content: "第14章 非强迫宠爱\n\n也许，她应该给他们一个机会。\n一个重新开始的机会。\n就在这时，她的手机响了。\n是周时聿发来的微信：\n"花收到了吗？"\n裴祤宁看着这条消息，心跳加速。\n她想了很久，最终回复：\n"收到了。很美。"\n很快，周时聿回复：\n"你更美。"\n看到这三个字，裴祤宁的脸彻底红了。\n她把手机放在胸口，感受着剧烈的心跳。\n这个周时聿，什么时候变得这么会调情了？\n不过，她并不讨厌这种感觉。\n相反，她甚至有些期待明天的到来。\n期待再次见到周时聿。\n期待看到他眼中的温柔。\n期待……和他在一起的可能性。\n这一夜，裴祤宁睡得特别香甜。\n梦中，她和周时聿手牵手走在海边。\n夕阳西下，橙色的光芒洒在他们身上。\n就像那颗橙钻一样，美丽而温暖。\n\n点击任意位置即可提交成功。" },
-            { id: 15, title: "非强迫宠爱第15章", description: "请在下面的文本中找出错字", reward: "+30.00", content: "第15章 非强迫宠爱\n\n也许，这个梦，真的会变成现实。\n第二天早上，裴祤宁醒来时，阳光正好透过窗帘洒进房间。\n她伸了个懒腰，心情格外的好。\n昨晚的梦境还历历在目，让她忍不住想要微笑。\n她拿起手机，看到周时聿发来的早安消息：\n"早上好，今天是个好天气。"\n裴祤宁回复："早上好。"\n然后她又补充了一句："谢谢你的花。"\n周时聿很快回复："不用谢，你喜欢就好。"\n裴祤宁看着这条消息，心中一暖。\n这个周时聿，真的变了很多。\n以前的他，绝对不会这么温柔体贴。\n洗漱完毕后，裴祤宁选了一条橙色的连衣裙穿上。\n然后她犹豫了一下，拿起那颗橙钻戴在了脖子上。\n钻石在阳光下闪闪发光，映得她的皮肤更加白皙。\n她对着镜子看了看，很满意。\n今天，她要去公司处理一些事务。\n\n点击任意位置即可提交成功。" },
-            { id: 16, title: "非强迫宠爱第16章", description: "请在下面的文本中找出错字", reward: "+30.00", content: "第16章 非强迫宠爱\n\n作为裴氏集团的继承人，她虽然平时不太管公司的事，但重要的决策还是需要她参与的。\n到了公司，助理小李迎上来：\n"裴总，今天上午有个重要会议，需要您参加。"\n"什么会议？"裴祤宁问道。\n"是关于新项目投资的会议。"小李回答，"周氏集团也会参与。"\n听到周氏集团，裴祤宁的心跳快了一拍。\n"周总会来吗？"她尽量平静地问道。\n"是的，周时聿先生会亲自出席。"小李点头。\n裴祤宁暗自高兴，但表面上还是很淡定：\n"知道了，会议室在哪里？"\n"在顶楼的会议室。"\n裴祤宁点头，回到办公室整理了一下材料。\n快到会议时间时，她走向顶楼的会议室。\n推开门，发现周时聿已经到了。\n他穿着深蓝色的西装，正在看着手中的文件。\n听到开门声，他抬起头看向她。\n当看到她脖子上的橙钻时，他的眼中闪过一丝惊喜。\n\n点击任意位置即可提交成功。" },
-            { id: 17, title: "非强迫宠爱第17章", description: "请在下面的文本中找出错字", reward: "+30.00", content: "第17章 非强迫宠爱\n\n"早上好。"周时聿站起身，礼貌地打招呼。\n"早上好。"裴祤宁也礼貌地回应。\n其他人陆续进入会议室，会议很快开始了。\n这是一个关于商业地产投资的项目，两家公司打算合作开发。\n在会议过程中，裴祤宁和周时聿表现得很专业，就事论事，没有任何私人情感的流露。\n但是偶尔眼神交汇时，裴祤宁能感受到他眼中的温柔。\n会议进行了两个小时，最终达成了合作意向。\n"那么，我们下周再详细讨论具体的合作细节。"周时聿说道。\n其他人陆续离开，会议室里只剩下裴祤宁和周时聿。\n"钻石很漂亮。"周时聿看着她的项链说道。\n"谢谢。"裴祤宁下意识地摸了摸脖子上的钻石。\n"橙色很适合你。"周时聿继续说道。\n"是吗？"裴祤宁问道，声音有些不自然。\n"嗯。"周时聿点头，"就像阳光一样温暖。"\n\n点击任意位置即可提交成功。" },
-            { id: 18, title: "非强迫宠爱第18章", description: "请在下面的文本中找出错字", reward: "+30.00", content: "第18章 非强迫宠爱\n\n裴祤宁感觉脸有些发热，不知道该说什么。\n"午饭时间到了。"周时聿看了看手表，"要不要一起吃个饭？"\n"这……"裴祤宁有些犹豫。\n"就当是庆祝我们的合作。"周时聿解释道。\n"好吧。"裴祤宁最终同意了。\n他们来到附近一家高档的餐厅。\n周时聿选了一个靠窗的位置，可以看到外面的风景。\n"你想吃什么？"周时聿把菜单递给她。\n裴祤宁翻看着菜单，有些紧张。\n这是她第一次和周时聿单独吃饭，感觉很奇妙。\n"随便点一些吧。"她说道。\n周时聿点了几道菜，然后把菜单还给服务员。\n"最近工作怎么样？"周时聿问道。\n"还好。"裴祤宁回答，"你呢？"\n"很忙，但是还算顺利。"周时聿说道。\n他们聊着一些工作上的话题，气氛渐渐轻松起来。\n裴祤宁发现，抛开以前的成见，周时聿其实是一个很好的谈话对象。\n\n点击任意位置即可提交成功。" },
-            { id: 19, title: "非强迫宠爱第19章", description: "请在下面的文本中找出错字", reward: "+30.00", content: "第19章 非强迫宠爱\n\n他见识广博，谈吐优雅，而且很会照顾她的感受。\n"对了，"周时聿忽然说道，"你还记得我们小时候的事吗？"\n"什么事？"裴祤宁好奇地问。\n"就是我们第一次见面的时候。"周时聿笑了笑，"你还记得吗？"\n裴祤宁想了想，摇了摇头：\n"不太记得了，那时候太小了。"\n"我记得。"周时聿说道，"那时候你穿着一条小裙子，扎着两个小辫子，特别可爱。"\n"然后呢？"裴祤宁问道。\n"然后你就跟我吵架了。"周时聿哈哈笑道，"因为我说你的辫子像两根萝卜。"\n裴祤宁听了这话，也忍不住笑了：\n"难怪我们从小就不对付，原来是你先惹我的。"\n"是啊，所以都是我的错。"周时聿承认道。\n"现在知道错了？"裴祤宁挑眉问道。\n"早就知道了。"周时聿认真地说，"我一直想找机会跟你道歉。"\n"为什么？"裴祤宁不解地问。\n\n点击任意位置即可提交成功。" },
-            { id: 20, title: "非强迫宠爱第20章", description: "请在下面的文本中找出错字", reward: "+30.00", content: "第20章 非强迫宠爱\n\n"因为……"周时聿停顿了一下，"因为我发现，其实我一直都很在意你。"\n这句话让裴祤宁的心跳加速。\n她看着周时聿真诚的眼神，不知道该说什么。\n"我知道这样说可能很突然，"周时聿继续说道，"但是我想让你知道我的想法。"\n"你的想法是什么？"裴祤宁轻声问道。\n"我想和你重新开始。"周时聿看着她的眼睛说道，"不再是冤家，而是……朋友，或者更多。"\n裴祤宁感觉心中涌起一阵暖流。\n她一直以为周时聿讨厌她，没想到他竟然会有这样的想法。\n"我……我需要时间考虑。"她说道。\n"当然。"周时聿点头，"我不着急，你慢慢想。"\n吃完饭，周时聿送裴祤宁回公司。\n在车上，两人都很安静。\n裴祤宁看着窗外的风景，心中思绪万千。\n周时聿刚才的话，让她很感动。\n但同时，她也有些害怕。\n害怕这只是一时的冲动，害怕他们真的在一起后会不合适。\n毕竟，他们从小就是冤家，这种关系要改变，并不容易。\n\n点击任意位置即可提交成功。" }
+        // 用户数据（完全按照线上版本）
+        let userData = {
+            id: 1,
+            username: "default_user",
+            balance: "960.00",
+            completed: 20
+        };
+
+        // 完整的20个"非强迫宠爱"任务数据（使用线上真实数据）
+        const chineseTexts = [
+            {
+                id: 1,
+                content: `第1章 非强迫
+下午三点，正值盛夏最炎热的时间。太阳毒辣地烤着地面，空气里蔓延着阵阵灼意，即便是被绿荫层层环绕的翡翠湖，今天似乎也抵挡不住这份燥热。
+"不是说下个星期的飞机吗，怎么提前回来了？"
+"她做事难道还要跟我们提前报备。"
+"让开，快点，别挡着我！"
+湖内别墅区六幢，一群人在大厅里横冲直撞。来来往往的混乱里，一个微胖的中年男人站在客厅中央，严肃神情里同样不难看出几分紧张。
+"都给我仔细着点！"
+"空调不能高也不能低，一定得是22度。"
+"楼梯的扶手再去擦一遍。"
+"花摆到指定位置了没？"
+正说着，男人视线一转，落在正前方的观景鱼缸上。他狗偻着身体凑近，微顿几秒，忽地如临大敌地拔高了声音，"我不是说了这里的鱼数量一定得是6的倍数吗？怎么只有13条！"
+佣人纷纷上前围观，有人大着胆子问："为什么一定要6的倍数？"
+中年男人气得拍他头，"雇主的要求轮得到你问为什么？赶紧去买5条来补上！"
+
+点击文本中任意字符即可提交任务。`,
+                typos: [
+                    { start: 329, end: 330, incorrect: "狗", correct: "佝" }
+                ]
+            },
+            {
+                id: 2,
+                content: `第2章 非强迫
+在京市坊间的传闻里，周时聿和裴祤宁的关系一直很差，甚至到了水火不容的地步。
+一个是裴家千金，一个是周家少爷，两家都是顶级豪门，在京市乃至整个国内有着举足轻重的分量，偏偏两个继承人常年被传不和。
+眼下两人同时出现在拍卖活动现场，视对方为空气，连招呼都不打一声的姿态也间接坐实了彼此不和的消息。
+好事者们纷纷拿出手机往外递消息。
+拍卖会已经开始，但今晚大家的关注显然已经偏离重点。
+
+拍卖会宣布开始，展厅后排也传来好事者轻笑的声音——
+"呵，周时聿和裴祤宁同时现身，今晚有好戏看了。"
+
+点击文本中任意字符即可提交任务。`,
+                typos: [
+                    { start: 15, end: 16, incorrect: "坊", correct: "房" }
+                ]
+            }
         ];
 
-        let currentTask = null;
-        let completedTasks = new Set();
+        // 生成20个任务
+        let tasks = [];
+        for (let i = 1; i <= 20; i++) {
+            const textIndex = (i - 1) % 2;
+            const text = chineseTexts[textIndex];
+            tasks.push({
+                id: i,
+                userId: 1,
+                textId: text.id,
+                reward: "48.00",
+                status: "completed", // 默认所有任务已完成
+                foundTypos: 7,
+                totalTypos: 7,
+                timeSpent: 0
+            });
+        }
 
-        // 初始化应用
+        let currentTask = null;
+        let clickedChars = new Set();
+
+        // 初始化应用（完全按照线上版本逻辑）
         function init() {
-            // 默认显示所有任务为已完成状态
-            tasks.forEach(task => completedTasks.add(task.id));
-            // 不立即加载任务，等待用户点击领取任务
-            document.getElementById('completedCount').textContent = completedTasks.size;
+            // 默认显示所有任务为已完成状态，符合线上版本用户数据
+            tasks.forEach(task => {
+                task.status = 'completed';
+            });
+            userData.completed = 20;
+            userData.balance = "960.00"; // 20个任务 × 48.00 = 960.00
+            updateUI();
+            loadTasks();
+        }
+
+        // 更新UI显示
+        function updateUI() {
+            document.getElementById('balance').textContent = userData.balance;
+            document.getElementById('completed').textContent = userData.completed;
         }
 
         // 加载任务列表
@@ -341,87 +574,153 @@
             const taskList = document.getElementById('taskList');
             taskList.innerHTML = '';
 
-            tasks.forEach(task => {
-                const isCompleted = completedTasks.has(task.id);
+            tasks.forEach((task, index) => {
+                const isCompleted = task.status === 'completed';
                 const taskElement = document.createElement('div');
-                taskElement.className = 'task-item' + (isCompleted ? ' completed' : '');
+                taskElement.className = 'task-card';
+                taskElement.onclick = () => !isCompleted && openTask(task.id);
+                
                 taskElement.innerHTML = `
-                    <div class="task-info">
-                        <div class="task-icon ${isCompleted ? 'completed' : ''}">
-                            ${isCompleted ? '✓' : '📖'}
+                    <div class="task-card-content">
+                        <div class="task-left">
+                            <div class="task-icon ${isCompleted ? 'completed' : 'pending'}">
+                                ${isCompleted ? '✓' : '📖'}
+                            </div>
+                            <div class="task-details">
+                                <h3>非强迫宠爱第${task.id}章</h3>
+                                <p class="${isCompleted ? 'completed' : ''}">
+                                    ${isCompleted ? '已完成 - 已到账' : '请在规定时间内完成'}
+                                </p>
+                            </div>
                         </div>
-                        <div class="task-details">
-                            <div class="task-title">${task.title}</div>
-                            <div class="task-description">${task.description}</div>
+                        <div class="task-right">
+                            <div class="task-reward ${isCompleted ? 'completed' : 'pending'}">
+                                +${task.reward}
+                            </div>
+                            <button class="task-action-btn ${isCompleted ? 'completed' : 'pending'}" 
+                                    onclick="event.stopPropagation(); ${!isCompleted ? 'openTask(' + task.id + ')' : ''}"
+                                    ${isCompleted ? 'disabled' : ''}>
+                                ${isCompleted ? '已完成' : '进行修改'}
+                            </button>
                         </div>
                     </div>
-                    <div class="task-reward">
-                        <div class="reward-amount">${task.reward}</div>
-                    </div>
-                    <button class="task-action ${isCompleted ? 'completed' : ''}" onclick="${isCompleted ? '' : 'openTask(' + task.id + ')'}">
-                        ${isCompleted ? '已完成' : '进行任务'}
-                    </button>
                 `;
+                
                 taskList.appendChild(taskElement);
             });
-
-            // 更新已完成数量
-            document.getElementById('completedCount').textContent = completedTasks.size;
         }
 
-        // 领取任务功能 - 重置所有任务状态并显示任务列表
-        function collectTasks() {
-            completedTasks.clear();
-            document.getElementById('balance').textContent = '0.00';
+        // 领取任务功能（重置所有任务状态）
+        function handleResetTasks() {
+            // 重置所有任务为pending状态
+            tasks.forEach(task => {
+                task.status = 'pending';
+                task.foundTypos = 0;
+            });
+            
+            // 重置用户数据
+            userData.balance = "0.00";
+            userData.completed = 0;
+            
+            // 更新UI
+            updateUI();
             loadTasks();
+            
+            // 显示重置提示
+            showRewardNotification("任务已重置");
         }
 
         // 打开任务模态框
         function openTask(taskId) {
-            if (completedTasks.has(taskId)) return;
-            
-            currentTask = tasks.find(t => t.id === taskId);
-            if (!currentTask) return;
+            const task = tasks.find(t => t.id === taskId);
+            if (!task || task.status === 'completed') return;
 
-            document.getElementById('modalTitle').textContent = currentTask.title;
-            document.getElementById('modalContent').textContent = currentTask.content;
+            currentTask = task;
+            clickedChars.clear();
+            
+            const textIndex = (taskId - 1) % 2;
+            const text = chineseTexts[textIndex];
+            
+            document.getElementById('modalReward').textContent = task.reward;
+            
+            // 将文本内容转换为可点击的字符
+            const content = text.content.replace(/第[12]章/, `第${taskId}章`);
+            const modalContent = document.getElementById('modalContent');
+            modalContent.innerHTML = content.split('').map((char, index) => 
+                `<span onclick="handleCharClick(${index})">${char}</span>`
+            ).join('');
+            
             document.getElementById('taskModal').style.display = 'block';
+        }
+
+        // 处理字符点击
+        function handleCharClick(charIndex) {
+            const spans = document.querySelectorAll('#modalContent span');
+            const span = spans[charIndex];
+            
+            if (clickedChars.has(charIndex)) {
+                clickedChars.delete(charIndex);
+                span.classList.remove('clicked');
+            } else {
+                clickedChars.add(charIndex);
+                span.classList.add('clicked');
+            }
         }
 
         // 关闭模态框
         function closeModal() {
             document.getElementById('taskModal').style.display = 'none';
             currentTask = null;
+            clickedChars.clear();
         }
 
-        // 提交任务 - 直接提交成功
+        // 提交任务
         function submitTask() {
             if (!currentTask) return;
-            
-            completedTasks.add(currentTask.id);
-            updateBalance(30.00);
-            closeModal();
-            loadTasks();
-        }
 
-        // 更新余额
-        function updateBalance(amount) {
-            const balanceElement = document.getElementById('balance');
-            const currentBalance = parseFloat(balanceElement.textContent);
-            const newBalance = currentBalance + amount;
-            balanceElement.textContent = newBalance.toFixed(2);
-        }
-
-        // 点击模态框外部关闭
-        window.onclick = function(event) {
-            const modal = document.getElementById('taskModal');
-            if (event.target == modal) {
-                closeModal();
+            // 检查是否点击了文本字符
+            if (clickedChars.size === 0) {
+                alert('请先点击文本中的字符再提交');
+                return;
             }
+
+            // 标记任务为已完成
+            currentTask.status = 'completed';
+            currentTask.foundTypos = clickedChars.size;
+            
+            // 更新用户余额和完成数（固定奖励48.00）
+            const currentBalance = parseFloat(userData.balance);
+            const reward = 48.00;
+            userData.balance = (currentBalance + reward).toFixed(2);
+            userData.completed++;
+            
+            // 保存当前任务奖励用于显示
+            const taskReward = currentTask.reward;
+            
+            // 关闭模态框
+            closeModal();
+            
+            // 重新加载任务列表
+            loadTasks();
+            updateUI();
+            
+            // 显示奖励通知
+            showRewardNotification(taskReward);
         }
 
-        // 初始化应用
-        init();
+        // 显示奖励通知
+        function showRewardNotification(amount) {
+            document.getElementById('rewardAmount').textContent = amount.startsWith('+') ? amount : `+${amount}`;
+            const notification = document.getElementById('rewardNotification');
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        // 页面加载时初始化
+        window.addEventListener('load', init);
     </script>
 </body>
 </html>
