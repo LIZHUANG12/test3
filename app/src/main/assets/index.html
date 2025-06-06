@@ -218,6 +218,17 @@
             gap: 8px;
             flex: 1;
             justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-card.balance:active {
+            transform: scale(0.98);
         }
 
         .stat-icon {
@@ -248,12 +259,13 @@
         .modal-content {
             background: white;
             border-radius: 16px;
-            height: 100%;
+            height: 100vh;
             display: flex;
             flex-direction: column;
             color: #333;
             overflow: hidden;
             animation: redPacket 1s ease-out;
+            position: relative;
         }
 
         .modal-header {
@@ -263,6 +275,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-shrink: 0;
         }
 
         .modal-reward {
@@ -293,8 +306,10 @@
             background: #f9fafb;
             border-radius: 8px;
             margin: 20px;
+            margin-bottom: 0;
             user-select: none;
-            min-height: 400px;
+            min-height: 300px;
+            max-height: calc(100vh - 280px);
         }
 
         .modal-text-content span {
@@ -343,6 +358,93 @@
 
         .submit-btn:active {
             transform: scale(0.98);
+        }
+
+        /* Withdrawal Modal */
+        .withdrawal-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            padding: 20px;
+        }
+
+        .withdrawal-content {
+            background: white;
+            border-radius: 16px;
+            max-width: 400px;
+            margin: 50% auto 0;
+            transform: translateY(-50%);
+            padding: 30px;
+            text-align: center;
+            color: #333;
+            animation: redPacket 0.5s ease-out;
+        }
+
+        .withdrawal-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .withdrawal-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #1f2937;
+        }
+
+        .withdrawal-amount {
+            font-size: 32px;
+            font-weight: 700;
+            color: #059669;
+            margin-bottom: 20px;
+        }
+
+        .withdrawal-text {
+            font-size: 16px;
+            color: #6b7280;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .withdrawal-btn {
+            width: 100%;
+            background: #059669;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .withdrawal-btn:hover {
+            background: #047857;
+        }
+
+        .cancel-btn {
+            width: 100%;
+            background: #f3f4f6;
+            color: #6b7280;
+            border: none;
+            border-radius: 12px;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .cancel-btn:hover {
+            background: #e5e7eb;
         }
 
         /* Reward Notification */
@@ -405,13 +507,6 @@
             100% { transform: scale(1) rotate(0deg); opacity: 1; }
         }
 
-        /* Icons */
-        .icon {
-            display: inline-block;
-            width: 1em;
-            height: 1em;
-        }
-
         /* Responsive */
         @media (min-width: 768px) {
             .modal-content {
@@ -442,13 +537,13 @@
 
         <!-- Floating Stats -->
         <div class="floating-stats">
-            <div class="stat-card">
+            <div class="stat-card balance" onclick="openWithdrawal()">
                 <div class="stat-icon">💳</div>
-                <div class="stat-text">余额: ¥<span id="balance">30.00</span></div>
+                <div class="stat-text">余额: ¥<span id="balance">600.00</span></div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon">🏆</div>
-                <div class="stat-text">已完成: <span id="completed">0</span></div>
+                <div class="stat-text">已完成: <span id="completed">20</span></div>
             </div>
         </div>
     </div>
@@ -457,7 +552,7 @@
     <div class="modal-backdrop" id="taskModal">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-reward">报酬: ¥<span id="modalReward">48.00</span></div>
+                <div class="modal-reward">报酬: ¥<span id="modalReward">30.00</span></div>
                 <button class="close-btn" onclick="closeModal()">&times;</button>
             </div>
             <div class="modal-text-content" id="modalContent">
@@ -472,6 +567,18 @@
         </div>
     </div>
 
+    <!-- Withdrawal Modal -->
+    <div class="withdrawal-modal" id="withdrawalModal">
+        <div class="withdrawal-content">
+            <div class="withdrawal-icon">💰</div>
+            <div class="withdrawal-title">微信提现</div>
+            <div class="withdrawal-amount">¥<span id="withdrawalAmount">0.00</span></div>
+            <div class="withdrawal-text">确认提现到微信钱包？<br>提现后余额将清零</div>
+            <button class="withdrawal-btn" onclick="confirmWithdrawal()">确认提现</button>
+            <button class="cancel-btn" onclick="closeWithdrawal()">取消</button>
+        </div>
+    </div>
+
     <!-- Reward Notification -->
     <div class="reward-notification" id="rewardNotification">
         <div class="coins-large">💰</div>
@@ -481,15 +588,15 @@
     </div>
 
     <script>
-        // 用户数据（完全按照线上版本）
+        // 用户数据
         let userData = {
             id: 1,
             username: "default_user",
-            balance: "960.00",
+            balance: "600.00",
             completed: 20
         };
 
-        // 完整的20个"非强迫宠爱"任务数据（使用线上真实数据）
+        // 完整的20个"非强迫宠爱"任务数据
         const chineseTexts = [
             {
                 id: 1,
@@ -499,13 +606,6 @@
 "她做事难道还要跟我们提前报备。"
 "让开，快点，别挡着我！"
 湖内别墅区六幢，一群人在大厅里横冲直撞。来来往往的混乱里，一个微胖的中年男人站在客厅中央，严肃神情里同样不难看出几分紧张。
-"都给我仔细着点！"
-"空调不能高也不能低，一定得是22度。"
-"楼梯的扶手再去擦一遍。"
-"花摆到指定位置了没？"
-正说着，男人视线一转，落在正前方的观景鱼缸上。他狗偻着身体凑近，微顿几秒，忽地如临大敌地拔高了声音，"我不是说了这里的鱼数量一定得是6的倍数吗？怎么只有13条！"
-佣人纷纷上前围观，有人大着胆子问："为什么一定要6的倍数？"
-中年男人气得拍他头，"雇主的要求轮得到你问为什么？赶紧去买5条来补上！"
 
 点击文本中任意字符即可提交任务。`,
                 typos: [
@@ -518,8 +618,6 @@
 在京市坊间的传闻里，周时聿和裴祤宁的关系一直很差，甚至到了水火不容的地步。
 一个是裴家千金，一个是周家少爷，两家都是顶级豪门，在京市乃至整个国内有着举足轻重的分量，偏偏两个继承人常年被传不和。
 眼下两人同时出现在拍卖活动现场，视对方为空气，连招呼都不打一声的姿态也间接坐实了彼此不和的消息。
-好事者们纷纷拿出手机往外递消息。
-拍卖会已经开始，但今晚大家的关注显然已经偏离重点。
 
 拍卖会宣布开始，展厅后排也传来好事者轻笑的声音——
 "呵，周时聿和裴祤宁同时现身，今晚有好戏看了。"
@@ -540,8 +638,8 @@
                 id: i,
                 userId: 1,
                 textId: text.id,
-                reward: "48.00",
-                status: "completed", // 默认所有任务已完成
+                reward: "30.00",
+                status: "completed",
                 foundTypos: 7,
                 totalTypos: 7,
                 timeSpent: 0
@@ -551,14 +649,14 @@
         let currentTask = null;
         let clickedChars = new Set();
 
-        // 初始化应用（完全按照线上版本逻辑）
+        // 初始化应用
         function init() {
-            // 默认显示所有任务为已完成状态，符合线上版本用户数据
+            // 默认显示所有任务为已完成状态
             tasks.forEach(task => {
                 task.status = 'completed';
             });
             userData.completed = 20;
-            userData.balance = "960.00"; // 20个任务 × 48.00 = 960.00
+            userData.balance = "600.00"; // 20个任务 × 30.00 = 600.00
             updateUI();
             loadTasks();
         }
@@ -610,7 +708,7 @@
             });
         }
 
-        // 领取任务功能（重置所有任务状态）
+        // 领取任务功能
         function handleResetTasks() {
             // 重置所有任务为pending状态
             tasks.forEach(task => {
@@ -688,9 +786,9 @@
             currentTask.status = 'completed';
             currentTask.foundTypos = clickedChars.size;
             
-            // 更新用户余额和完成数（固定奖励48.00）
+            // 更新用户余额和完成数
             const currentBalance = parseFloat(userData.balance);
-            const reward = 48.00;
+            const reward = 30.00;
             userData.balance = (currentBalance + reward).toFixed(2);
             userData.completed++;
             
@@ -717,6 +815,63 @@
             setTimeout(() => {
                 notification.style.display = 'none';
             }, 3000);
+        }
+
+        // 打开提现模态框
+        function openWithdrawal() {
+            const balance = parseFloat(userData.balance);
+            if (balance <= 0) {
+                alert('余额不足，无法提现');
+                return;
+            }
+            
+            document.getElementById('withdrawalAmount').textContent = userData.balance;
+            document.getElementById('withdrawalModal').style.display = 'block';
+        }
+
+        // 关闭提现模态框
+        function closeWithdrawal() {
+            document.getElementById('withdrawalModal').style.display = 'none';
+        }
+
+        // 确认提现
+        function confirmWithdrawal() {
+            const withdrawAmount = userData.balance;
+            
+            // 清零余额
+            userData.balance = "0.00";
+            updateUI();
+            
+            // 关闭提现模态框
+            closeWithdrawal();
+            
+            // 显示提现成功通知
+            showWithdrawalSuccess(withdrawAmount);
+        }
+
+        // 显示提现成功通知
+        function showWithdrawalSuccess(amount) {
+            // 复用奖励通知显示提现成功
+            document.getElementById('rewardAmount').textContent = `提现 ¥${amount}`;
+            const notification = document.getElementById('rewardNotification');
+            notification.style.display = 'block';
+            
+            // 修改通知内容
+            const coinsIcon = notification.querySelector('.coins-large');
+            const title = notification.querySelector('h3');
+            const status = notification.querySelector('.status');
+            
+            coinsIcon.textContent = '💳';
+            title.textContent = '提现成功';
+            status.textContent = '已到账微信钱包';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+                // 恢复原始状态
+                coinsIcon.textContent = '💰';
+                title.textContent = '恭喜获得';
+                status.textContent = '已到账';
+            }, 4000);
         }
 
         // 页面加载时初始化
