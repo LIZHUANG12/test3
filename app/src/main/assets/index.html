@@ -34,7 +34,7 @@
             color: white;
             font-size: 20px;
             font-weight: 500;
-            margin-bottom: 20px;
+            margin-bottom: 60px;
         }
 
         .collect-btn {
@@ -50,6 +50,7 @@
             top: 20px;
             right: 20px;
             box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+            z-index: 10;
         }
 
         .collect-btn:hover {
@@ -277,7 +278,7 @@
 
         <div class="footer">
             <div class="total-balance">
-                总余额: <span class="balance-amount" id="balance">960.00</span>
+                余额: <span class="balance-amount" id="balance">960.00</span>
             </div>
             <div class="total-balance">
                 已完成: <span class="balance-amount" id="completedCount">20</span>
@@ -331,7 +332,8 @@
         function init() {
             // 默认显示所有任务为已完成状态
             tasks.forEach(task => completedTasks.add(task.id));
-            loadTasks();
+            // 不立即加载任务，等待用户点击领取任务
+            document.getElementById('completedCount').textContent = completedTasks.size;
         }
 
         // 加载任务列表
@@ -367,10 +369,10 @@
             document.getElementById('completedCount').textContent = completedTasks.size;
         }
 
-        // 领取任务功能 - 重置所有任务状态
+        // 领取任务功能 - 重置所有任务状态并显示任务列表
         function collectTasks() {
             completedTasks.clear();
-            document.getElementById('balance').textContent = '330.00';
+            document.getElementById('balance').textContent = '0.00';
             loadTasks();
         }
 
